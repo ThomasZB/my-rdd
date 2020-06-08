@@ -63,3 +63,6 @@ for image_path in image_path_list:
 # 同时预测不同方向的图片
 image_tensor = tf.convert_to_tensor(processed_image)
 (boxes, scores, classes, num) = mobile_func(image_tensor)
+
+
+# 对输出进行解码
