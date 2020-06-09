@@ -12,22 +12,26 @@ class decode_reslut():
         self.min_score = min_score
 
     def decode_box(self, predict_result):
+        # 将数据转化为numpy array
         (boxes, scores, classes, num) = predict_result
-        boxes = boxes.numpy()
-        scores = scores.numpy()
-        classes = classes.numpy()
-        num = num.numpy()
+        boxes = np.squeeze(boxes)
+        scores = np.squeeze(scores)
+        classes = np.squeeze(classes).astype(np.uint32)
+        num = np.squeeze(num)
 
-        for i in range(num.astype(np.uint32)[0]):
-            boxes[i][0] *= self.im_width
-            boxes[i][2] *= self.im_width
-            boxes[i][1] *= self.im_height
-            boxes[i][3] *= self.im_height
-            if scores[i] >= self.min_score:
+        processed_boxes = []
+        for i in range(num.astype(np.uint32)):
+            if scores[i] <= self.min_score:
                 self.object_num = i
                 break
+            processed_boxes.append(np.array([
+                boxes[i][0] * self.im_width,
+                boxes[i][1] * self.im_height,
+                boxes[i][2] * self.im_width,
+                boxes[i][3] * self.im_height
+            ]).astype(np.uint32))
+            
         processed_scores = scores[:self.object_num]
         processed_classes = classes[:self.object_num]
-        processed_boxes = boxes[:self.object_num]
 
-        return (processed_boxes, processed_scores, processed_classes, num)
+        return (processed_boxes, processed_scores, processed_classes, self.object_num)

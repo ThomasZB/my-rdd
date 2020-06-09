@@ -50,26 +50,31 @@ mobile_func = wrap_frozen_graph(graph_def,
 
 # 图片的预处理（进行中值滤波）
 processed_image = []
-image_path_list = [filename for filename in os.listdir('.\\save_image')] # 获取不同方位图像的列表
+image_path_list = [filename for filename in os.listdir('.\\save_image')]  # 获取不同方位图像的列表
 # 对不同目录的图片分别进行滤波
-for image_path in image_path_list:
+for image_path in image_path_list: 
     file_list = [filename for filename in os.listdir('.\\save_image\\' + image_path)]
     img_list = []
     for file in file_list:
-        img = load_image_into_numpy_array('image_test/' + file)
+        img = load_image_into_numpy_array('save_image\\' + image_path + '\\' + file)
         img_list.append(img)
     last_img = np.median(img_list, axis=0).astype(np.uint8)
     processed_image.append(last_img)
 
+processed_image = np.array(processed_image).astype(np.uint8)
+
 # 模型的预测
-
-# 同时预测不同方向的图片
-image_tensor = tf.convert_to_tensor(processed_image)
-result = mobile_func(image_tensor).numpy()
-
+image_tensor = tf.convert_to_tensor(processed_image)  # 同时预测不同方向的图片
+predict_result = mobile_func(image_tensor)
 
 # 对输出进行解码
 result_decoded = []
-for image in processed_image:
+for i in range(3):
+    tmp_result = (predict_result[0][i], predict_result[1][i], predict_result[2][i], predict_result[3][i])
+    im_decode = decode_reslut(processed_image[i], 0.3)
+    result_decoded.append(im_decode.decode_box(tmp_result))
 
-im_decode = decode_reslut(processed_image[0], 0.3)
+# 打印结果
+print(result_decoded[0])
+print(result_decoded[1])
+print(result_decoded[2])
