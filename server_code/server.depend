@@ -1,0 +1,38 @@
+# depslib dependency file v1.0
+1588840494 source:c:\users\wwz\desktop\socket_chet\server\main.cpp
+	<stdio.h>
+	<WinSock2.h>
+	<iostream>
+
+1590028514 source:c:\users\wwz\desktop\socket\server\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<WinSock2.h>
+	<iostream>
+	<thread>
+	<mutex>
+	<process.h>
+	<fstream>
+
+1591618241 source:c:\users\wwz\desktop\rode_detect\server\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<WinSock2.h>
+	<iostream>
+	<thread>
+	<mutex>
+	<process.h>
+	<fstream>
+
+1591635508 source:c:\users\wwz\desktop\server2\server\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<WinSock2.h>
+	<iostream>
+	<thread>
+	<mutex>
+	<process.h>
+	<fstream>
+	<errno.h>
+	<string.h>
+

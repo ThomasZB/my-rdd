@@ -32,13 +32,13 @@ def load_image_into_numpy_array(image_path):
 
 
 # 定义相关的错误类型
-category_index = {1: {'id': 1, 'name': 'ShuXiang'},
-                    2: {'id': 2, 'name': 'HengXiang'},
-                    3: {'id': 3, 'name': 'GuiLie'},
-                    4: {'id': 4, 'name': 'Keng'},
-                    5: {'id': 5, 'name': 'BanMaXian'},
-                    6: {'id': 6, 'name': 'ZhongXian'},
-                    7: {'id': 7, 'name': 'JinGai'}}
+category_index = {1: {'id': 1, 'name': 'Vertical crack'},
+                    2: {'id': 2, 'name': 'Transverse crack'},
+                    3: {'id': 3, 'name': 'Cracked ground'},
+                    4: {'id': 4, 'name': 'Pothole'},
+                    5: {'id': 5, 'name': 'Cross walk blur'},
+                    6: {'id': 6, 'name': 'White line blur'},
+                    7: {'id': 7, 'name': 'Manhole cover'}}
 
 
 # 载入模型
@@ -56,7 +56,7 @@ for image_path in image_path_list:
     file_list = [filename for filename in os.listdir('.\\save_image\\' + image_path)]
     img_list = []
     for file in file_list:
-        img = load_image_into_numpy_array('save_image\\' + image_path + '\\' + file)
+        img = cv2.imread('save_image\\' + image_path + '\\' + file)
         img_list.append(img)
     last_img = np.median(img_list, axis=0).astype(np.uint8)
     processed_image.append(last_img)
@@ -69,10 +69,23 @@ predict_result = mobile_func(image_tensor)
 
 # 对输出进行解码
 result_decoded = []
+result_image = []
 for i in range(3):
     tmp_result = (predict_result[0][i], predict_result[1][i], predict_result[2][i], predict_result[3][i])
-    im_decode = decode_reslut(processed_image[i], 0.3)
+    im_decode = decode_reslut(processed_image[i], 0.25)
     result_decoded.append(im_decode.decode_box(tmp_result))
+    vis_util.visualize_boxes_and_labels_on_image_array(
+        processed_image[i],
+        np.squeeze(tmp_result[0]),
+        np.squeeze(tmp_result[2]).astype(np.int32),  # class
+        np.squeeze(tmp_result[1]),
+        category_index,
+        min_score_thresh=0.25,
+        use_normalized_coordinates=True,
+        line_thickness=8)
+    im = Image.fromarray(processed_image[i])
+    im.save("predict_image\\" + str(i) + ".jpeg")
+
 
 # 打印结果
 print(result_decoded[0])
