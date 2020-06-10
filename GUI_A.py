@@ -150,14 +150,6 @@ def show_other2(event):
 
 
 result_decoded = image_predict()
-print(result_decoded[0])
-print(result_decoded[1])
-print(result_decoded[2])
-
-
-print(result_decoded[0][3])
-print(result_decoded[1])
-print(result_decoded[2])
 
 level = 0
 color = ["file\\green", "file\\green", "file\\green"]

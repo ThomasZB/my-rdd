@@ -55,14 +55,14 @@ def image_predict():
 
     # 图片的预处理（进行中值滤波）
     processed_image = []
-    image_path_list = [filename for filename in os.listdir('.\\save_image')]  # 获取不同方位图像的列表
+    image_path_list = [filename for filename in os.listdir('.\\save_images')]  # 获取不同方位图像的列表
     substracted = load_image_into_numpy_array('file\\test.bmp')
     # 对不同目录的图片分别进行滤波
     for image_path in image_path_list: 
-        file_list = [filename for filename in os.listdir('.\\save_image\\' + image_path)]
+        file_list = [filename for filename in os.listdir('.\\save_images\\' + image_path)]
         img_list = []
         for file in file_list:
-            img = load_image_into_numpy_array('save_image\\' + image_path + '\\' + file)
+            img = load_image_into_numpy_array('save_images\\' + image_path + '\\' + file)
             img = relu(np.subtract(img, substracted)).astype(np.uint8)
             img_list.append(img)
         last_img = np.median(img_list, axis=0).astype(np.uint8)
